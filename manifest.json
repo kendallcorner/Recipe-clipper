@@ -1,0 +1,37 @@
+{
+
+  "description": "Demonstrating toolbar buttons",
+  "manifest_version": 2,
+  "name": "Recipe Clipper",
+  "version": "1.0",
+
+  //"content_scripts": [
+  //  {
+  //    "matches": ["https://developer.mozilla.org/*"],
+  //    "js": ["clipper.js"]
+  //  }
+  //],
+ 
+
+  "background": {
+    "scripts": ["background.js"]
+  },
+
+  "permissions": [
+    "<all_urls>",
+    "tabs",
+    "activeTab",
+    "contextMenus"
+  ],
+
+  "browser_action": {
+    //"browser_style": true,
+    //"default_popup": "popup/choose_page.html",
+
+    "default_icon": {
+      "16": "icons/page-16.png",
+      "48": "icons/page-48.png"
+    }
+  }
+
+}
