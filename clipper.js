@@ -44,17 +44,43 @@ if (ListOfTags.hasOwnProperty(baseURL)) {
 
     recipe.url = url
     recipe.baseURL = baseURL
-    recipe.instructions = document.getElementsByClassName(siteTags.instructions)
+    recipe.instructions = document.getElementsByClassName(siteTags.instructions)[0].textContent
+
+    recipe.ingredients = []
     var Ingredients = document.getElementsByClassName(siteTags.ingredients)
-    console.log("Ingredients: ", Ingredients)
+    for (var i = 0; i < Ingredients.length; i++) {
+        recipe.ingredients[i] = Ingredients[i].textContent.trim();
+        console.log(recipe.ingredients[i])
+    }
+    recipe.ingredients;
 
 
+    recipe.time = document.getElementsByClassName(siteTags.time)[0].textContent.trim();
+
+    recipe.title = document.getElementsByTagName(siteTags.titleTag)[0].textContent.trim();
+
+    recipe.pictureURL = document.getElementsByClassName(siteTags.picture)[0].currentSrc;
+
+    recipe.yield = document.getElementsByClassName(siteTags.yield)[0].textContent.trim();
 
     // Get the modal
     var modal = document.createElement('div');
     modal.innerHTML = '<div id="myModal" class="modal"><div id="modal-content"><span id="close-modal" class="close">&times;</span> </div></div>';
     document.body.appendChild(modal);
-    //console.log(modal);
+
+    ingredientList = '<ol><li>'
+    for (var i = 0; i < recipe.ingredients.length; i++) {
+        ingredientList = ingredientList + recipe.ingredients[i] + '</li><li>'
+    }
+
+    recipePopup = '<h1>' + recipe.title + '</h1>' 
+        + '<p>Yield: ' + recipe.yield + '</p>'
+        + '<p>Time:' + recipe.time + '</p>'
+        + '<p>Ingredients</p>' + ingredientList
+        + '<p>Instructions</p>' + recipe.instructions;
+
+    var content = document.getElementById('modal-content')
+    content.innerHTML = content.innerHTML + recipePopup;
 
     modal.style.setProperty('display', 'block')
     modal.style.setProperty('position', 'fixed')
@@ -68,26 +94,12 @@ if (ListOfTags.hasOwnProperty(baseURL)) {
     modal.style.setProperty('background-color', 'rgb(0,0,0)')
     modal.style.setProperty('background-color', 'rgba(0,0,0,0.4)')
 
-
-    var content = document.getElementById('modal-content')
     content.style.setProperty('background-color', '#fefefe')
     content.style.setProperty('margin', 'auto')
     content.style.setProperty('padding', '20px')
     content.style.setProperty('border', '1px solid #888')
     content.style.setProperty('width', '80%')
 
-    /* The Close Button
-    .close 
-
-
-    .close:hover,
-    .close:focus
-
-    content.style.setProperty('color', '#000'
-    'text-decoration', 'none'
-    'cursor', 'pointer' */
-
-    // Get the <span> element that closes the modal
     var close = document.getElementById("close-modal")
     close.style.setProperty('color', '#aaaaaa')
     close.style.setProperty('float', 'right')
@@ -118,9 +130,6 @@ if (ListOfTags.hasOwnProperty(baseURL)) {
         }
         console.log("elsewhere clicked")
     }
-
-    content.textContent = Ingredients[0].textContent
-
 
 } else {
     console.log("Not a known recipe site")
