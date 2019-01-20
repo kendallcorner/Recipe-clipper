@@ -1,20 +1,20 @@
 
-ListOfTags = {
+SiteData = {
     "www.foodnetwork.com": {
         baseURL: "www.foodnetwork.com",
         ingredientsTag: "div",
-        ingredients: "o-Ingredients__m-Body",
+        ingredientsClass: "o-Ingredients__m-Body",
         instructionsTag: "div",
-        instructions: "o-Method__m-Body",
+        instructionsClass: "o-Method__m-Body",
         timeTag: "ul",
-        time: "o-RecipeInfo__m-Time",
-        title: "o-AssetTitle__a-Headline",
+        timeClass: "o-RecipeInfo__m-Time",
+        titleClass: "o-AssetTitle__a-Headline",
         titleTag: "h1",
-        picture: "m-MediaBlock__a-Image a-Image",
+        pictureClass: "m-MediaBlock__a-Image a-Image",
         pictureTag: "img",
-        yield: "o-RecipeInfo__m-Yield",
-        yieldTag: "ul"
-
+        yieldClass: "o-RecipeInfo__m-Yield",
+        yieldTag: "ul",
+        "parseit": function(baseURL, url) { return foodnetworkParser(baseURL, url); },
     }, 
     "www.foodnetwork.com": {
         baseURL: "www.foodnetwork.com",
@@ -39,29 +39,8 @@ url = window.location
 baseURL = window.location.host
 recipe = {}
 
-if (ListOfTags.hasOwnProperty(baseURL)) {
-    siteTags = ListOfTags[baseURL]
-
-    recipe.url = url
-    recipe.baseURL = baseURL
-    recipe.instructions = document.getElementsByClassName(siteTags.instructions)[0].textContent
-
-    recipe.ingredients = []
-    var Ingredients = document.getElementsByClassName(siteTags.ingredients)
-    for (var i = 0; i < Ingredients.length; i++) {
-        recipe.ingredients[i] = Ingredients[i].textContent.trim();
-        console.log(recipe.ingredients[i])
-    }
-    recipe.ingredients;
-
-
-    recipe.time = document.getElementsByClassName(siteTags.time)[0].textContent.trim();
-
-    recipe.title = document.getElementsByTagName(siteTags.titleTag)[0].textContent.trim();
-
-    recipe.pictureURL = document.getElementsByClassName(siteTags.picture)[0].currentSrc;
-
-    recipe.yield = document.getElementsByClassName(siteTags.yield)[0].textContent.trim();
+if (SiteData.hasOwnProperty(baseURL)) {
+    recipe = foodnetworkParser(baseURL, url, document)
 
     // Get the modal
     var modal = document.createElement('div');
@@ -133,4 +112,36 @@ if (ListOfTags.hasOwnProperty(baseURL)) {
 
 } else {
     console.log("Not a known recipe site")
+}
+
+function foodnetworkParser(baseURL, url) {
+    siteInfo = SiteData[baseURL]
+    var recipe = {}
+
+    recipe.url = url
+    recipe.baseURL = baseURL
+    
+    recipe.ingredients = []
+    var ingredientList = document.getElementsByClassName(siteInfo.ingredientsClass)
+    for (var i = 0; i < ingredientList.length; i++) {
+        recipe.ingredients[i] = ingredientList[i].textContent.trim();
+        console.log(recipe.ingredients[i])
+    }
+
+    recipe.instruction =  getByClass(siteInfo.instructionsClass, 0)
+    recipe.timeParse = getByClass(siteInfo.timeClass, 0)
+    recipe.titleParse = getByTag(siteInfo.titleTag, 0) 
+    recipe.pictureParse = getByClass(siteInfo.pictureTag, 0)
+    recipe.yieldParse = getByClass(siteInfo.yieldTag, 0)
+
+    return recipe;
+}
+
+
+function getByClass(className, index) {
+    document.getElementsByClassName(className)[index].textContent.trim()
+}
+
+function getByTag(tag, index) {
+    document.getElementsByClassName(tag)[index].textContent.trim()
 }
